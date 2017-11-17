@@ -10,20 +10,21 @@
 #include "user_webserver.h"
 
 
-#include "driver/gpio16.h"//GPIO16Í·ÎÄ¼ş
-#include "Gpio.h"//GPIOÍ·ÎÄ¼ş
-#include "driver/uart.h"//´®¿ÚÍ·ÎÄ¼ş
+#include "driver/gpio16.h"//GPIO16å¤´æ–‡ä»¶
+#include "Gpio.h"//GPIOå¤´æ–‡ä»¶
+#include "driver/uart.h"//ä¸²å£å¤´æ–‡ä»¶
 
 #include "espconn.h"
 #include "mem.h"
 #include "ip_addr.h"
 
 struct espconn user_tcp_conn;
+extern uint8 wsd_val[4];
+extern u8 BUF[2];
 
 
 
-
-void my_station_init(struct ip_addr *remote_ip,struct ip_addr *local_ip,int remote_port);//clientÒµÎñÖ÷º¯Êı
+void my_station_init(struct ip_addr *remote_ip,struct ip_addr *local_ip,int remote_port);//clientä¸šåŠ¡ä¸»å‡½æ•°
 void my_uart0_sendStr(const char *str,uint8 length);
 
 #endif /* CLIENT_H_ */
