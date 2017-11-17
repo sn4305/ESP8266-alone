@@ -1,22 +1,22 @@
 /******************************************************************************
-									¹ûÔÆ¿Æ¼¼                                              
+									æœäº‘ç§‘æŠ€                                              
 
-							  ESP8266   ¿ª·¢°åÀı³Ì 
+							  ESP8266   å¼€å‘æ¿ä¾‹ç¨‹ 
 
 							     SDK Verson: 1.30   IOT
 							
-						            CLASS  1 :     GPIO  Æª
+						            CLASS  1 :     GPIO  ç¯‡
 
 						            
-Ö÷Òª ÄÚÈİ:
+ä¸»è¦ å†…å®¹:
 
-GPIO µÄ³õÊ¼»¯ºÍÊä³ö(°üº¬ÌØÊâGPIO16)
+GPIO çš„åˆå§‹åŒ–å’Œè¾“å‡º(åŒ…å«ç‰¹æ®ŠGPIO16)
 
-ÏµÍ³Î¢Ãë¼¶ÑÓÊ±os_delay_us
+ç³»ç»Ÿå¾®ç§’çº§å»¶æ—¶os_delay_us
 
 /***********************************************************************************************************************
 
-¹ûÔÆ¿ª·¢°å¹ºÂòµØÖ·: https://item.taobao.com/item.htm?spm=a230r.1.14.136.sTa8ie&id=42115449685&ns=1&abbucket=20#detail
+æœäº‘å¼€å‘æ¿è´­ä¹°åœ°å€: https://item.taobao.com/item.htm?spm=a230r.1.14.136.sTa8ie&id=42115449685&ns=1&abbucket=20#detail
 
 ***********************************************************************************************************************/
 #include "ets_sys.h"
@@ -28,14 +28,14 @@ GPIO µÄ³õÊ¼»¯ºÍÊä³ö(°üº¬ÌØÊâGPIO16)
 #include "user_webserver.h"
 
 
-#include "driver/gpio16.h"//GPIO16Í·ÎÄ¼ş
-#include "Gpio.h"//GPIOÍ·ÎÄ¼ş
+#include "driver/gpio16.h"//GPIO16å¤´æ–‡ä»¶
+#include "Gpio.h"//GPIOå¤´æ–‡ä»¶
 
 #include "../include/Tcp_Client.h"
-#include "driver/uart.h"//´®¿ÚÍ·ÎÄ¼ş
+#include "driver/uart.h"//ä¸²å£å¤´æ–‡ä»¶
 #include "driver/sht3x.h"
 #include "ip_addr.h"
-#define delay_us   os_delay_us  //ÏµÍ³Î¢Ãî¼¶
+#define delay_us   os_delay_us  //ç³»ç»Ÿå¾®å¦™çº§
 #if ESP_PLATFORM
 #include "user_esp_platform.h"
 #endif
@@ -75,10 +75,10 @@ short real_humi;
 char zt=1;
 
 
-void My_JDQ_Init(void)   //¼ÌµçÆ÷³õÊ¼»¯
+void My_JDQ_Init(void)   //ç»§ç”µå™¨åˆå§‹åŒ–
 {
-      gpio16_output_conf();//GPIO16ÉèÖÃ³ÉÊä³öÄ£Ê½
-      gpio16_output_set(0);//Ä¬ÈÏµÍµçÆ½
+      gpio16_output_conf();//GPIO16è®¾ç½®æˆè¾“å‡ºæ¨¡å¼
+      gpio16_output_set(0);//é»˜è®¤ä½ç”µå¹³
 }
 
 
@@ -86,9 +86,9 @@ void My_JDQ_Init(void)   //¼ÌµçÆ÷³õÊ¼»¯
 //configure WIFI as station
 void My_Sta_Conf(void)
 {
-    wifi_set_opmode(STATION_MODE);//ÉèÖÃÎªSTAÄ£Ê½
+    wifi_set_opmode(STATION_MODE);//è®¾ç½®ä¸ºSTAæ¨¡å¼
     os_delay_us(300);
-    os_printf("wifi mode is:%d",wifi_get_opmode());
+    //os_printf("wifi mode is:%d",wifi_get_opmode());
 
     wifi_station_get_config(&sta_conf);
 
@@ -96,26 +96,26 @@ void My_Sta_Conf(void)
     os_memcpy(sta_conf.password,MY_PASSWORD,strlen(MY_PASSWORD));
 
     while(!wifi_station_set_config(&sta_conf));
-    os_printf("wifi set successfully");
+    //os_printf("wifi set successfully");
 }
 
 
 void My_LED_Init(void)
 {
-    //ÅäÖÃ GPIO4£¬ 5  Îª ÆÕÍ¨IO¿Ú
- 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO4_U,FUNC_GPIO4);//ÂÌµÆ
- 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO5_U,FUNC_GPIO5);//ºìµÆ
+    //é…ç½® GPIO4ï¼Œ 5  ä¸º æ™®é€šIOå£
+ 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO4_U,FUNC_GPIO4);//ç»¿ç¯
+ 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO5_U,FUNC_GPIO5);//çº¢ç¯
 }
 
 void  USART_init(void)
 {
-   //³õÊ¼»¯Á½¸ö´®¿ÚÎª²¨ÌØÂÊ115200
+   //åˆå§‹åŒ–ä¸¤ä¸ªä¸²å£ä¸ºæ³¢ç‰¹ç‡115200
    uart_init(BIT_RATE_9600,BIT_RATE_115200);
 
    LOCAL uint8 RELAY_MODE_SET[] = {0xdd, 0xcc, 0xaa, 0x01,\
 		                            0x01, 0x00, 0x00, 0x00,\
                                     0x04, 0xf4, 0x78};
-   //·¢ËÍ×Ö·û´®Êı¾İ
+   //å‘é€å­—ç¬¦ä¸²æ•°æ®
    uart0_sendStr("==========================\r\n");
    uart0_sendStr("==========================\r\n");
    os_delay_us(3000);
@@ -131,27 +131,27 @@ void timer_callback(){
 //    	GPIO_OUTPUT_SET(GPIO_ID_PIN(5), 0);
 //    	os_printf("zt:%d\r\n",zt);
         zt = 0;
-        uint32 current_stamp, rtc_t1, err_RTC_CurrentStamp,Cal_RTCPeriod,t1;
-        uint8 *TimeString;
-        float Cal_RTCPeriod_Real=0.0;
+        //uint32 current_stamp, rtc_t1, err_RTC_CurrentStamp,Cal_RTCPeriod,t1;
+       // uint8 *TimeString;
+       // float Cal_RTCPeriod_Real=0.0;
 
-        Cal_RTCPeriod = system_rtc_clock_cali_proc();
-        Cal_RTCPeriod_Real = (Cal_RTCPeriod>>12) + (((Cal_RTCPeriod*1000)>>12)%1000)/1000.0;
+        //Cal_RTCPeriod = system_rtc_clock_cali_proc();
+       // Cal_RTCPeriod_Real = (Cal_RTCPeriod>>12) + (((Cal_RTCPeriod*1000)>>12)%1000)/1000.0;
 
-        rtc_t1 = system_get_rtc_time();
-        t1 = rtc_t1 * Cal_RTCPeriod_Real / 1000000;
-
-
-        current_stamp = sntp_get_current_timestamp();
-
-        err_RTC_CurrentStamp = current_stamp - rtc_t1;
+       // rtc_t1 = system_get_rtc_time();
+       // t1 = rtc_t1 * Cal_RTCPeriod_Real / 1000000;
 
 
-        os_printf("###Snap: %d, %s \n",current_stamp, sntp_get_real_time(current_stamp));
-        os_printf("###RTC: %d, %s \n",rtc_t1, sntp_get_real_time(current_stamp));
-        os_printf("###Cal_RTCPeriod: %d\n",Cal_RTCPeriod);
-        os_printf("###Cal_RTCPeriod_Real: %d.%d\n",Cal_RTCPeriod>>12,((Cal_RTCPeriod*1000)>>12)%1000);
-        os_printf("###t1: %d \n",t1);
+       //current_stamp = sntp_get_current_timestamp();
+
+       // err_RTC_CurrentStamp = current_stamp - rtc_t1;
+
+
+      //  os_printf("###Snap: %d, %s \n",current_stamp, sntp_get_real_time(current_stamp));
+       // os_printf("###RTC: %d, %s \n",rtc_t1, sntp_get_real_time(current_stamp));
+       // os_printf("###Cal_RTCPeriod: %d\n",Cal_RTCPeriod);
+      //  os_printf("###Cal_RTCPeriod_Real: %d.%d\n",Cal_RTCPeriod>>12,((Cal_RTCPeriod*1000)>>12)%1000);
+      //  os_printf("###t1: %d \n",t1);
 
 
 //        my_uart0_sendStr(OPEN_RELAY2,7);
@@ -182,11 +182,15 @@ void timer_callback(){
 	}
 	wsd_val[0]=(u8)(((short)tempdata>>8)&0xff);
 	wsd_val[1]=(u8)((short)tempdata&0xff);
-    wsd_val[2]=(u8)(((short)humiditydata>>8)&0xff);
+        wsd_val[2]=(u8)(((short)humiditydata>>8)&0xff);
 	wsd_val[3]=(u8)((short)humiditydata&0xff);
+	
+	Start_BH1750();
+	delay_ms(180);
+	Read_BH1750();
 
-	my_uart0_sendStr(Prefix,3);
-	my_uart0_sendStr(wsd_val,4);
+	//my_uart0_sendStr(Prefix,3);
+	//my_uart0_sendStr(wsd_val,4);
 
 
 
@@ -195,23 +199,23 @@ void timer_callback(){
 
 void ICACHE_FLASH_ATTR Wifi_conned(void *arg){
     static uint8 count=0;
-    struct ip_info info; //ÓÃÓÚ»ñÈ¡IPµØÖ·µÄĞÅÏ¢
+    struct ip_info info; //ç”¨äºè·å–IPåœ°å€çš„ä¿¡æ¯
     uint8 status;
     os_timer_disarm(&connect_timer);
     count++;
     status=wifi_station_get_connect_status();
     if(status==STATION_GOT_IP){
-        os_printf("Wifi connect success!");
+       // os_printf("Wifi connect success!");
         GPIO_OUTPUT_SET(GPIO_ID_PIN(4), 1);
 
-        const char remote_ip[4]={REMOTE_IP};//ÓÃÓÚ´æ·Å±¾µØIPµØÖ·,Ò»¶¨ÒªÊÇ×Ô¼ºµÄµçÄÔÕæÊµµÄ±¾µØIPµØÖ·
+        const char remote_ip[4]={REMOTE_IP};//ç”¨äºå­˜æ”¾æœ¬åœ°IPåœ°å€,ä¸€å®šè¦æ˜¯è‡ªå·±çš„ç”µè„‘çœŸå®çš„æœ¬åœ°IPåœ°å€
         wifi_get_ip_info(STATON_IF,&info);
 
-        my_station_init((struct ip_addr *)remote_ip,&info.ip,TCP_PORT);//TCP client¶ËµÄÒµÎñÖ÷º¯ÊıÈë¿Ú
+        my_station_init((struct ip_addr *)remote_ip,&info.ip,TCP_PORT);//TCP clientç«¯çš„ä¸šåŠ¡ä¸»å‡½æ•°å…¥å£
         return;
     }else{
         if(count>=7){
-        os_printf("Wifi connect fail£¡");
+       // os_printf("Wifi connect failï¼");
         GPIO_OUTPUT_SET(GPIO_ID_PIN(4), 0);
         return;
         }
@@ -224,7 +228,7 @@ void delay_ms(unsigned int t)
 	 for(;t>0;t--)
 	 	{
 	   	delay_us(1000);
-	       system_soft_wdt_feed();//ÕâÀïÎÒÃÇÎ¹ÏÂ¿´ÃÅ¹·  £¬²»ÈÃ¿´ÃÅ¹·¸´Î»£¬Êµ¼Ê¿ª·¢ÉÏ²»»áÓÃÄÇÃ´³¤µÄ×èÈûÑÓÊ±
+	       system_soft_wdt_feed();//è¿™é‡Œæˆ‘ä»¬å–‚ä¸‹çœ‹é—¨ç‹—  ï¼Œä¸è®©çœ‹é—¨ç‹—å¤ä½ï¼Œå®é™…å¼€å‘ä¸Šä¸ä¼šç”¨é‚£ä¹ˆé•¿çš„é˜»å¡å»¶æ—¶
 	 	}
 }
 void user_rf_pre_init(void)
@@ -257,13 +261,13 @@ void user_init(void)
     SHT3X_StartPeriodicMeasurment(REPEATAB_HIGH, FREQUENCY_4HZ);
 
     //SNTP get time from Internet
-    ip_addr_t *addr = (ip_addr_t *)os_zalloc(sizeof(ip_addr_t));
-    sntp_setservername(0, "us.pool.ntp.org"); // set server 0 by domain name
-    sntp_setservername(1, "ntp.sjtu.edu.cn"); // set server 1 by domain name
-    ipaddr_aton("210.72.145.44", addr);
-    sntp_setserver(2, addr); // set server 2 by IP address
-    sntp_init();
-    os_free(addr);
+   // ip_addr_t *addr = (ip_addr_t *)os_zalloc(sizeof(ip_addr_t));
+   // sntp_setservername(0, "us.pool.ntp.org"); // set server 0 by domain name
+   // sntp_setservername(1, "ntp.sjtu.edu.cn"); // set server 1 by domain name
+   // ipaddr_aton("210.72.145.44", addr);
+   // sntp_setserver(2, addr); // set server 2 by IP address
+  //  sntp_init();
+  //  os_free(addr);
 
 
     os_timer_disarm(&timer);
