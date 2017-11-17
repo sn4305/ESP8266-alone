@@ -1,12 +1,12 @@
 /*
  * Tcp_Client.c
  *
- *  Created on: 2017Äê10ÔÂ12ÈÕ
+ *  Created on: 2017å¹´10æœˆ12æ—¥
  *      Author: dongdong
  */
 
 #include "../include/Tcp_Client.h"
-#include "driver/uart.h"//´®¿ÚÍ·ÎÄ¼ş
+#include "driver/uart.h"//ä¸²å£å¤´æ–‡ä»¶
 
 LOCAL uint8 CLOSE_RELAY1[7] = {0xdd, 0xcc, 0xab, 0x00, 0x02, 0x07, 0x62};
 LOCAL uint8 CLOSE_RELAY2[7] = {0xdd, 0xcc, 0xab, 0x02, 0x00, 0x87, 0xc3};
@@ -40,11 +40,11 @@ extern uint8 sw_val[2];
 void ICACHE_FLASH_ATTR user_tcp_recv_cb(void *arg,
         char *pdata,
         unsigned short len)
-{//½ÓÊÕÊı¾İµÄ»Øµ÷º¯Êı
+{//æ¥æ”¶æ•°æ®çš„å›è°ƒå‡½æ•°
 
 //	uint8 *temp;
 //	uint8 *humi;
-//    os_printf("ÊÕµ½Êı¾İ£º%s\r\n");//½«½ÓÊÕµ½µÄÊı¾İ´òÓ¡³öÀ´
+//    os_printf("æ”¶åˆ°æ•°æ®ï¼š%s\r\n");//å°†æ¥æ”¶åˆ°çš„æ•°æ®æ‰“å°å‡ºæ¥
     if(strstr(pdata,"close") != NULL)
     {
     	if(strstr(pdata,"y1") != NULL)
@@ -84,26 +84,27 @@ void ICACHE_FLASH_ATTR user_tcp_recv_cb(void *arg,
     	Prefix_wsd_val[7] = sw_val[0];
     	Prefix_wsd_val[8] = sw_val[1];
     	espconn_send(arg,Prefix_wsd_val,9);
+        espconn_send(arg,BUF,2);
 
 
     }
 
-    //espconn_disconnect((struct espconn *)arg);//¶Ï¿ªÁ¬½Ó£¬ÊÇ×÷Îª¿Í»§»úÍê³ÉÒ»´ÎÇëÇóÈ»ºó¶Ï¿ªµÄÒâË¼
+    //espconn_disconnect((struct espconn *)arg);//æ–­å¼€è¿æ¥ï¼Œæ˜¯ä½œä¸ºå®¢æˆ·æœºå®Œæˆä¸€æ¬¡è¯·æ±‚ç„¶åæ–­å¼€çš„æ„æ€
 }
 
-void ICACHE_FLASH_ATTR user_tcp_sent_cb(void *arg){//·¢ËÍÊı¾İ³É¹¦µÄ»Øµ÷º¯Êı
-    os_printf("·¢ËÍÊı¾İ³É¹¦£¡£¡\r\n");
+void ICACHE_FLASH_ATTR user_tcp_sent_cb(void *arg){//å‘é€æ•°æ®æˆåŠŸçš„å›è°ƒå‡½æ•°
+    os_printf("å‘é€æ•°æ®æˆåŠŸï¼ï¼\r\n");
 }
 
-void ICACHE_FLASH_ATTR user_tcp_discon_cb(void *arg){//¶Ï¿ªÁ¬½ÓµÄ»Øµ÷º¯Êı
-    os_printf("¶Ï¿ªÁ¬½Ó³É¹¦£¡\r\n");
+void ICACHE_FLASH_ATTR user_tcp_discon_cb(void *arg){//æ–­å¼€è¿æ¥çš„å›è°ƒå‡½æ•°
+    os_printf("æ–­å¼€è¿æ¥æˆåŠŸï¼\r\n");
     GPIO_OUTPUT_SET(GPIO_ID_PIN(5), 0);
     os_delay_us(100000);
     espconn_connect(&user_tcp_conn);
 }
 
-void ICACHE_FLASH_ATTR user_tcp_recon_cb(void *arg,sint8 err){//ÖØÁ¬»Øµ÷º¯Êı
-    os_printf("Á¬½Ó´íÎó£¬´íÎó´úÂëÎª%d\r\n",err);//´òÓ¡³öÁ¬½Ó´íÎó´úÂë
+void ICACHE_FLASH_ATTR user_tcp_recon_cb(void *arg,sint8 err){//é‡è¿å›è°ƒå‡½æ•°
+    os_printf("è¿æ¥é”™è¯¯ï¼Œé”™è¯¯ä»£ç ä¸º%d\r\n",err);//æ‰“å°å‡ºè¿æ¥é”™è¯¯ä»£ç 
     GPIO_OUTPUT_SET(GPIO_ID_PIN(5), 0);
     espconn_connect(&user_tcp_conn);
 }
@@ -111,11 +112,11 @@ void ICACHE_FLASH_ATTR user_tcp_recon_cb(void *arg,sint8 err){//ÖØÁ¬»Øµ÷º¯Êı
 void ICACHE_FLASH_ATTR user_tcp_connect_cb(void *arg){
     struct espconn *pespconn = arg;
 
-    espconn_regist_recvcb(pespconn,user_tcp_recv_cb);//×¢²á½ÓÊÕÊı¾İµÄ»Øµ÷º¯Êı
-    espconn_regist_sentcb(pespconn,user_tcp_sent_cb);//×¢²á·¢ËÍÊı¾İ³É¹¦µÄ»Øµ÷º¯Êı
-    espconn_regist_disconcb(pespconn,user_tcp_discon_cb);//×¢²á¶Ï¿ªÁ¬½ÓµÄ»Øµ÷º¯Êı
+    espconn_regist_recvcb(pespconn,user_tcp_recv_cb);//æ³¨å†Œæ¥æ”¶æ•°æ®çš„å›è°ƒå‡½æ•°
+    espconn_regist_sentcb(pespconn,user_tcp_sent_cb);//æ³¨å†Œå‘é€æ•°æ®æˆåŠŸçš„å›è°ƒå‡½æ•°
+    espconn_regist_disconcb(pespconn,user_tcp_discon_cb);//æ³¨å†Œæ–­å¼€è¿æ¥çš„å›è°ƒå‡½æ•°
 
-//    espconn_sent(pespconn,"ÕâÊÇESP8266",strlen("ÕâÊÇESP8266"));
+//    espconn_sent(pespconn,"è¿™æ˜¯ESP8266",strlen("è¿™æ˜¯ESP8266"));
     GPIO_OUTPUT_SET(GPIO_ID_PIN(5), 1);
 }
 
@@ -124,16 +125,16 @@ void ICACHE_FLASH_ATTR my_station_init(struct ip_addr *remote_ip,struct ip_addr 
     user_tcp_conn.state=ESPCONN_NONE;
     user_tcp_conn.proto.tcp=(esp_tcp *)os_zalloc(sizeof(esp_tcp));
 
-    //espconn²ÎÊıÅäÖÃ
+    //espconnå‚æ•°é…ç½®
     os_memcpy(user_tcp_conn.proto.tcp->local_ip,local_ip,4);
     os_memcpy(user_tcp_conn.proto.tcp->remote_ip,remote_ip,4);
     user_tcp_conn.proto.tcp->local_port=espconn_port();
     user_tcp_conn.proto.tcp->remote_port=remote_port;
 
-    //×¢²á»Øµ÷º¯ÊıºÍÖØÁ¬»Øµ÷º¯Êı
+    //æ³¨å†Œå›è°ƒå‡½æ•°å’Œé‡è¿å›è°ƒå‡½æ•°
     espconn_regist_connectcb(&user_tcp_conn,user_tcp_connect_cb);
     espconn_regist_reconcb(&user_tcp_conn,user_tcp_recon_cb);
 
-    //ÆôÓÃÁ¬½Ó
+    //å¯ç”¨è¿æ¥
     espconn_connect(&user_tcp_conn);
 }
