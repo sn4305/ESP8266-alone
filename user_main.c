@@ -70,7 +70,7 @@ uint8 sw_val[2];
 uint8 Prefix[3] = {0xaa,0xbb,0xcc};
 short real_temp;
 short real_humi;
-
+extern u8 BUF[2];
 
 char zt=1;
 
